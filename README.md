@@ -19,4 +19,5 @@ The backend is written in python;
 - Ranking you and your friends based on our distance
 - Having multiple destinations on the rote
 - Adding friends and follow their routes
+
 So stay tuned for the updates!
