@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div style="margin: 0; padding: 0; font-family: Arial, sans-serif; display: flex; height: 80vh; overflow: hidden;">
+    <div class="map-container" style="flex: 3; background-color: #222; display: flex; flex-direction: column; border-right: 1px solid #444; position: relative;">
+        <div class="map-header" style="display: flex; justify-content: space-between; padding: 15px; align-items: center;">
+            {% if request.cookies.get("access_token") %}
+            <div class="profile-icon" style="width: 40px; height: 40px; border-radius: 50%; background-color: #444; background-image: url('https://avatars.mds.yandex.net/i?id=321d7327207cf4d458059e0cbc03c28de557c59e-5703807-images-thumbs&n=13'); background-size: cover; background-position: center; cursor: pointer; border: 2px solid #666; order: -1;" onclick="window.location.href='/profile'"></div>
+            {% endif %}
+            <div style="width:40px"></div>
+        </div>
+        <div class="map-placeholder" style="flex: 1; margin: 0 15px 15px 15px; background-color: #333; display: flex; justify-content: center; align-items: center; font-size: 24px; color: #aaa; border-radius: 8px;">
+            <img src="{{ 'https://i0.wp.com/static.tildacdn.com/tild3062-6662-4137-a535-373262643465/msc.jpg?ssl=1' }}" style="width: 100%; height: 100%; object-fit: cover;">
+        </div>
+    </div>
+    
+    <div class="sidebar" style="flex: 1; display: flex; flex-direction: column; background-color: #222; color: #fff; min-height: 0; padding: 15px; box-sizing: border-box;">
+        <div class="search-container" style="width: 100%; margin-bottom: 15px;">
+            <form action="/routes" method="get" class="search-box" style="width: calc(100% - 30px); margin: 0 auto;">
+                <input type="text" name="city" placeholder="Поиск маршрутов..." style="width: 100%; padding: 12px 15px; border: none; border-radius: 20px; background-color: #333; color: #fff; font-size: 14px; box-sizing: border-box;">
+            </form>
+        </div>
+        
+        <div class="carousel-container" style="position: relative; width: calc(100% - 30px); margin: 0 auto 15px; height: 200px;">
+            <div class="carousel" style="position: relative; height: 100%; overflow: hidden; border-radius: 8px;">
+                {% for route in routes[:3] %}
+                <div class="carousel-slide {% if loop.first %}active{% endif %}" style="position: absolute; width: 100%; height: 100%; background-color: #333; display: flex; justify-content: center; align-items: center; opacity: {% if loop.first %}1{% else %}0{% endif %}; transition: opacity 0.5s ease;">
+                    <img src="{{ route.image_url or 'https://avatars.mds.yandex.net/i?id=2c92304ee5b7a9c2b8145c23b58a1eebe9ba411e-5240247-images-thumbs&n=13' }}" alt="{{ route.title }}" style="width: 100%; height: 100%; object-fit: cover;">
+                </div>
+                {% endfor %}
+            </div>
+            <button class="carousel-btn prev" style="position: absolute; top: 50%; transform: translateY(-50%); left: 10px; background-color: rgba(0,0,0,0.5); color: white; border: none; padding: 10px; cursor: pointer; z-index: 10; border-radius: 50%; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;" onclick="prevSlide()">❮</button>
+            <button class="carousel-btn next" style="position: absolute; top: 50%; transform: translateY(-50%); right: 10px; background-color: rgba(0,0,0,0.5); color: white; border: none; padding: 10px; cursor: pointer; z-index: 10; border-radius: 50%; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;" onclick="nextSlide()">❯</button>
+        </div>
+        
+        <div class="route-description" style="padding: 15px 0; overflow-y: auto; flex-grow: 1; line-height: 1.5; border-top: 1px solid #444; font-size: 14px;">
+            <h2>Популярные маршруты</h2>
+            {% for route in routes[:5] %}
+            <p>{{ route.title }} - {{ route.city }} ({{ route.distance_km }} км)</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<script>
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.carousel-slide');
+    
+    function showSlide(index) {
+        slides.forEach((slide, i) => {
+            slide.style.opacity = i === index ? '1' : '0';
+        });
+    }
+    
+    function nextSlide() {
+        currentSlide = (currentSlide + 1) % slides.length;
+        showSlide(currentSlide);
+    }
+    
+    function prevSlide() {
+        currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+        showSlide(currentSlide);
+    }
+    
+    setInterval(nextSlide, 5000);
+</script>
+{% endblock %}
