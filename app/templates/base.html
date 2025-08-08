@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Friendly</title>
+    <style>
+        :root {
+            --dark-bg: #1a1a1a;
+            --darker-bg: #121212;
+            --card-bg: #2a2a2a;
+            --accent: #4a90e2;
+            --text: #f0f0f0;
+            --secondary-text: #b0b0b0;
+            --border: #3a3a3a;
+            --premium: #ffd700;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--darker-bg);
+            color: var(--text);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background-color: var(--dark-bg);
+            color: var(--text);
+            padding: 20px 0;
+            text-align: center;
+            border-bottom: 1px solid var(--border);
+            position: relative;
+        }
+        
+        .home-btn {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .home-btn:hover {
+            background-color: #3a7bc8;
+        }
+        
+        nav {
+            margin-top: 15px;
+        }
+        
+        nav a {
+            color: var(--text);
+            margin: 0 10px;
+            text-decoration: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        
+        nav a:hover {
+            background-color: var(--card-bg);
+        }
+        
+        .error {
+            color: #ff6b6b;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="/" class="home-btn">Главная</a>
+        <h1>Friendly</h1>
+        <nav>
+            <a href="/routes">Маршруты</a>
+            {% if request.cookies.get("access_token") %}
+                <a href="/favorites">Избранное</a>
+                <a href="/profile">Профиль</a>
+                <a href="/logout">Выйти</a>
+            {% else %}
+                <a href="/login">Вход</a>
+                <a href="/register">Регистрация</a>
+            {% endif %}
+        </nav>
+    </header>
+    
+    <div class="container">
+        {% block content %}{% endblock %}
+    </div>
+</body>
+</html>
